@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Chatbot</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #ece5dd;
+    margin: 0;
+}
+
+/* Header */
+.header {
+    background: #075e54;
+    color: white;
+    padding: 15px;
+    font-size: 18px;
+}
+
+/* Chat container */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+}
+
+/* Messages */
+.chat-box {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+/* Message style */
+.message {
+    max-width: 70%;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 10px;
+}
+
+/* User message */
+.user {
+    background: #dcf8c6;
+    align-self: flex-end;
+}
+
+/* Bot message */
+.bot {
+    background: white;
+    align-self: flex-start;
+}
+
+/* Input area */
+.input-area {
+    display: flex;
+    padding: 10px;
+    background: #f0f0f0;
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+}
+
+button {
+    margin-left: 10px;
+    padding: 10px 15px;
+    border: none;
+    background: #075e54;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    🤖 Chatbot Assistant
+</div>
+
+<div class="chat-container">
+    
+    <div class="chat-box" id="chat-box">
+    </div>
+
+    <div class="input-area">
+        <input type="text" id="message" placeholder="Écrire un message...">
+        <button onclick="sendMessage()">➤</button>
+    </div>
+
+</div>
+
+<script>
+function addMessage(text, type) {
+    let msg = document.createElement("div");
+    msg.classList.add("message", type);
+    msg.innerText = text;
+
+    document.getElementById("chat-box").appendChild(msg);
+    document.getElementById("chat-box").scrollTop = 9999;
+}
+
+function sendMessage() {
+    let input = document.getElementById("message");
+    let msg = input.value;
+
+    if(msg.trim() === "") return;
+
+    addMessage(msg, "user");
+
+    fetch("/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({message: msg})
+    })
+    .then(res => res.json())
+    .then(data => {
+        addMessage(data.response, "bot");
+    });
+
+    input.value = "";
+}
+</script>
+
+</body>
+</html>

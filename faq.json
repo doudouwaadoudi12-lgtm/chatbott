@@ -1,0 +1,22 @@
+[
+  {
+    "question": "Quels sont vos horaires ?",
+    "answer": "Nous sommes ouverts de 8h à 18h du lundi au vendredi."
+  },
+  {
+    "question": "Comment vous contacter ?",
+    "answer": "Vous pouvez nous contacter par email ou par téléphone."
+  },
+  {
+    "question": "Où êtes-vous situés ?",
+    "answer": "Nous sommes situés en Algérie."
+  },
+  {
+    "question": "Quels services proposez-vous ?",
+    "answer": "Nous proposons plusieurs services selon les besoins des clients."
+  },
+  {
+    "question": "Est-ce que vous livrez à domicile ?",
+    "answer": "Oui, nous proposons un service de livraison à domicile."
+  }
+]
