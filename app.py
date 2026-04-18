@@ -1,39 +1,38 @@
 from flask import Flask, render_template, request, jsonify
 import json
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
 
-# Charger FAQ
-with open("faq.json", "r", encoding="utf-8") as f:
-    data = json.load(f)
+# 🔹 Charger le fichier FAQ
+def load_faq():
+    with open("faq.json", "r", encoding="utf-8") as f:
+        return json.load(f)
 
-questions = [item["question"] for item in data]
-answers = [item["answer"] for item in data]
-
-vectorizer = TfidfVectorizer()
-X = vectorizer.fit_transform(questions)
-
-def chatbot_response(user_input):
-    user_vec = vectorizer.transform([user_input])
-    similarity = cosine_similarity(user_vec, X)
-    index = similarity.argmax()
-
-    if similarity[0][index] < 0.3:
-        return "Désolé, je n'ai pas compris votre question."
-
-    return answers[index]
-
+# 🔹 Page d’accueil
 @app.route("/")
 def home():
     return render_template("index.html")
 
-@app.route("/chat", methods=["POST"])
-def chat():
-    user_input = request.json["message"]
-    response = chatbot_response(user_input)
-    return jsonify({"response": response})
+# 🔹 Dashboard
+@app.route("/dashboard")
+def dashboard():
+    faqs = load_faq()
+    return render_template("dashboard.html", faqs=faqs)
 
+# 🔹 API chatbot (réponse aux questions)
+@app.route("/get_answer", methods=["POST"])
+def get_answer():
+    data = request.get_json()
+    user_question = data.get("question", "").lower()
+
+    faqs = load_faq()
+
+    for item in faqs:
+        if item["question"].lower() in user_question:
+            return jsonify({"answer": item["answer"]})
+
+    return jsonify({"answer": "Désolé, je n’ai pas compris votre question."})
+
+# 🔹 Lancer l’application
 if name == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
