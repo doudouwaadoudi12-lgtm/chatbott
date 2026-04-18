@@ -34,5 +34,5 @@ def get_answer():
     return jsonify({"answer": "Désolé, je n’ai pas compris votre question."})
 
 # 🔹 Lancer l’application
-if name == "__main__":
+if__name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
